@@ -2,21 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import './App.css';
 import abi from './utils/WavePortal.json';
-import 'dotenv/config';
-
 
 const App = () => {
 	const [currentAccount, setCurrentAccount] = useState('');
-	/**
-	 * Holds the contract address after deploy!
-	 */
-	const contractAddress = process.env.CONTRACT_ADDRESS;
+
+  // Sample contract address
+	const contractAddress = '0xd0A6954F29c6dfF58aBb8Bd93Dc3974Eea7170c8';
 	const contractABI = abi.abi;
 
 	const checkIfWalletIsConnected = async () => {
 		try {
 			const { ethereum } = window;
-
 			if (!ethereum) {
 				console.log('Make sure you have metamask!');
 				return;
@@ -25,7 +21,6 @@ const App = () => {
 			}
 
 			const accounts = await ethereum.request({ method: 'eth_accounts' });
-
 			if (accounts.length !== 0) {
 				const account = accounts[0];
 				console.log('Found an authorized account:', account);
@@ -81,10 +76,10 @@ const App = () => {
         */
 				const waveTxn = await wavePortalContract.wave();
 				console.log('Mining...', waveTxn.hash);
-
+        
 				await waveTxn.wait();
 				console.log('Mined -- ', waveTxn.hash);
-
+        
 				count = await wavePortalContract.getTotalWaves();
 				console.log('Retrieved total wave count...', count.toNumber());
 			} else {
@@ -106,15 +101,12 @@ const App = () => {
 		<div className="mainContainer">
 			<div className="dataContainer">
 				<div className="header">👋 Hey there!</div>
-
 				<div className="bio">
 					I am Salim, connect your Ethereum wallet and wave at me!
 				</div>
-
 				<button className="waveButton" onClick={wave}>
 					Wave at Me
 				</button>
-
 				{/*
         * If there is no currentAccount render this button
         */}
